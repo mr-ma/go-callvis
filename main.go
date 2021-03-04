@@ -43,6 +43,7 @@ var (
 	httpFlag     = flag.String("http", ":7878", "HTTP service address.")
 	skipBrowser  = flag.Bool("skipbrowser", false, "Skip opening browser.")
 	outputFile   = flag.String("file", "", "output filename - omit to use server mode")
+	packagesList = flag.Bool("packages", false, "output all the packages (direct and indirect) used in the program")
 	outputFormat = flag.String("format", "svg", "output file format [svg | png | jpg | ...]")
 	cacheDir     = flag.String("cacheDir", "", "Enable caching to avoid unnecessary re-rendering, you can force rendering by adding 'refresh=true' to the URL query or emptying the cache directory")
 
@@ -112,6 +113,12 @@ func outputDot(fname string, outputFormat string) {
 		log.Fatalf("%v\n", err)
 	}
 }
+func listPackages() {
+
+	for _, pack := range Analysis.prog.AllPackages() {
+		log.Println(pack.Pkg.Path())
+	}
+}
 
 //noinspection GoUnhandledErrorResult
 func main() {
@@ -131,10 +138,10 @@ func main() {
 		os.Exit(2)
 	}
 
-	args     := flag.Args()
-	tests    := *testFlag
+	args := flag.Args()
+	tests := *testFlag
 	httpAddr := *httpFlag
-	urlAddr  := parseHTTPAddr(httpAddr)
+	urlAddr := parseHTTPAddr(httpAddr)
 
 	Analysis = new(analysis)
 	if err := Analysis.DoAnalysis("", tests, args); err != nil {
@@ -143,7 +150,9 @@ func main() {
 
 	http.HandleFunc("/", handler)
 
-	if *outputFile == "" {
+	if *packagesList {
+		listPackages()
+	} else if *outputFile == "" {
 		*outputFile = "output"
 		if !*skipBrowser {
 			go openBrowser(urlAddr)
