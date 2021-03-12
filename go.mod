@@ -1,10 +1,9 @@
 module github.com/mr-ma/go-callvis
 
-go 1.12
+go 1.16
 
 require (
-	github.com/goccy/go-graphviz v0.0.6
-	github.com/ofabry/go-callvis v0.6.1
-	github.com/pkg/browser v0.0.0-20180916011732-0a3d74bf9ce4
-	golang.org/x/tools v0.0.0-20200305224536-de023d59a5d1
+	github.com/goccy/go-graphviz v0.0.9
+	github.com/pkg/browser v0.0.0-20210115035449-ce105d075bb4
+	golang.org/x/tools v0.1.0
 )
